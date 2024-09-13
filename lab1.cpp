@@ -2,9 +2,10 @@
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
+#include <string>
 
-// Jacobian method for solving systems of linear equations
-class JacobianMethod 
+// Jacobi and Seidel iterative methods for solving systems of linear equations
+class IterativeMethods 
 {
 private:
   static bool DiagonalDominance(const std::vector<std::vector<double>>& matrix) {
@@ -59,7 +60,7 @@ private:
     return true;
   }
 
-  static std::vector<double> Solver(const std::vector<std::vector<double>> &matrix, double eps, int limit) {
+  static std::vector<double> Solver(const std::vector<std::vector<double>> &matrix, double eps, int limit, std::string method) {
     int N = matrix.size();
 
     std::vector<double> x_old(N);
@@ -79,7 +80,13 @@ private:
         x[i] = matrix[i][N];
 
         for (int j = 0; j < N; ++j) {
-          if (j != i) {
+          if (i == j) {
+            continue;
+          }
+
+          if (method == "Seidel" && j < i) {
+            x[i] -= matrix[i][j] * x[j];
+          } else {
             x[i] -= matrix[i][j] * x_old[j];
           }
         }
@@ -100,7 +107,7 @@ private:
   }
 
 public:
-  static std::vector<double> Solve(std::vector<std::vector<double>> matrix, double eps, int limit) {
+  static std::vector<double> Solve(std::vector<std::vector<double>> matrix, double eps, int limit, std::string method) {
     if (!CheckInput(matrix)) {
       throw std::invalid_argument("A matrix must be of size n*(n+1) where the last column is the column of the constant terms and n != 0.");
     }
@@ -109,7 +116,7 @@ public:
       throw std::invalid_argument("The matrix contains a zero column. Jacobi's method is not applicable.");
     }
 
-    std::vector<double> ans = Solver(matrix, eps, limit);
+    std::vector<double> ans = (method == "Jacobian" ? Solver(matrix, eps, limit, "Jacobian") : Solver(matrix, eps, limit, "Seidel"));
 
     bool flag = false;
     for (double x : ans) {
@@ -137,7 +144,11 @@ int main() {
                                              {-0.11, -0.23, 1, 0.51, 1.2},
                                              {-0.17, 0.21, -0.31, 1, -0.17}};
 
-  std::vector<double> ans = JacobianMethod::Solve(matrix, 0.001, 10000000);
+  std::vector<std::vector<double>> matrix2 = {{5.6, 2.7, -1.7, 1.9}, 
+                                             {3.4, -3.6, -6.7, -2.4},
+                                             {0.8, 1.3, 3.7, 1.2}};
+
+  std::vector<double> ans = IterativeMethods::Solve(matrix2, 0.001, 100, "Seidel");
 
   for (double x : ans) {
     std::cout << x << ' ';
