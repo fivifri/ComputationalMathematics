@@ -7,6 +7,21 @@
 class JacobianMethod 
 {
 private:
+  static bool DiagonalDominance(const std::vector<std::vector<double>>& matrix) {
+    for (int i = 0; i < matrix.size(); ++i) {
+      double sum = -matrix[i][i];
+      for (int j = 0; j < matrix.size(); ++j) {
+        sum += std::abs(matrix[i][j]);
+      }
+
+      if (std::abs(matrix[i][i]) <= sum) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   static bool CheckInput(const std::vector<std::vector<double>>& matrix) {
     if (matrix.size() == 0) {
       return false;
@@ -96,14 +111,19 @@ public:
 
     std::vector<double> ans = Solver(matrix, eps, limit);
 
+    bool flag = false;
     for (double x : ans) {
       if (std::isnan(x) || std::isinf(x)) {
-        throw std::invalid_argument("The method didn't converge :(\nTry to convert the matrix to a diagonally dominant form."); 
+        flag = true;
       }
     }
 
-    if (ans.empty()) {
-      throw std::invalid_argument("Iteration limit exceeded."); 
+    if (ans.empty() || flag) {
+      if (!DiagonalDominance(matrix)) {
+        throw std::invalid_argument("The method didn't converge :(\nTry to convert the matrix to a diagonally dominant form."); 
+      } else {
+        throw std::invalid_argument("The method didn't converge :(\nTry to increase limit."); 
+      }
     }
 
     return ans;
@@ -117,7 +137,7 @@ int main() {
                                              {-0.11, -0.23, 1, 0.51, 1.2},
                                              {-0.17, 0.21, -0.31, 1, -0.17}};
 
-  std::vector<double> ans = JacobianMethod::Solve(matrix, 0.001, 10000);
+  std::vector<double> ans = JacobianMethod::Solve(matrix, 0.001, 10000000);
 
   for (double x : ans) {
     std::cout << x << ' ';
