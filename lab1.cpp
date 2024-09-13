@@ -113,7 +113,7 @@ public:
     }
 
     if (!MakeNonZeroDiag(matrix)) {
-      throw std::invalid_argument("The matrix contains a zero column. Jacobi's method is not applicable.");
+      throw std::invalid_argument("The matrix contains a zero column. Jacobi and Seidel iterative methods are not applicable.");
     }
 
     std::vector<double> ans = (method == "Jacobian" ? Solver(matrix, eps, limit, "Jacobian") : Solver(matrix, eps, limit, "Seidel"));
