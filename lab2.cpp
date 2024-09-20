@@ -37,12 +37,15 @@ double BisectionMethod(double (*function)(double), double a, double b, double ep
 double SecantMethod(double (*function)(double), double a, double b, double eps) {
   CheckInput(function, a, b);
 
-  while (std::abs(b - a) > eps) {
-    a = a - (b - a) * function(a) / (function(b) - function(a));
-    b = b - (a - b) * function(b) / (function(a) - function(b));
+  while (std::abs(function(a)) > eps) {
+    a = b - function(b) * (a - b) / (function(a) - function(b));
+
+    if (function(b) * function(a) < 0) {
+      std::swap(a, b);
+    }
   }
 
-  return b;
+  return a;
 }
 
 int main() {
