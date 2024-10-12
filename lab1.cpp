@@ -137,20 +137,20 @@ public:
   }
 };
 
-int main() {
-  // test
-  std::vector<std::vector<double>> matrix = {{1, -0.22, 0.11, -0.31, 2.7}, 
-                                             {-0.38, 1, 0.12, -0.22, -1.5},
-                                             {-0.11, -0.23, 1, 0.51, 1.2},
-                                             {-0.17, 0.21, -0.31, 1, -0.17}};
+// int main() {
+//   // test
+//   std::vector<std::vector<double>> matrix = {{1, -0.22, 0.11, -0.31, 2.7}, 
+//                                              {-0.38, 1, 0.12, -0.22, -1.5},
+//                                              {-0.11, -0.23, 1, 0.51, 1.2},
+//                                              {-0.17, 0.21, -0.31, 1, -0.17}};
 
-  std::vector<std::vector<double>> matrix2 = {{5.6, 2.7, -1.7, 1.9}, 
-                                             {3.4, -3.6, -6.7, -2.4},
-                                             {0.8, 1.3, 3.7, 1.2}};
+//   std::vector<std::vector<double>> matrix2 = {{5.6, 2.7, -1.7, 1.9}, 
+//                                              {3.4, -3.6, -6.7, -2.4},
+//                                              {0.8, 1.3, 3.7, 1.2}};
 
-  std::vector<double> ans = IterativeMethods::Solve(matrix2, 0.001, 100, "Seidel");
+//   std::vector<double> ans = IterativeMethods::Solve(matrix2, 0.001, 100, "Seidel");
 
-  for (double x : ans) {
-    std::cout << x << ' ';
-  }
-}
+//   for (double x : ans) {
+//     std::cout << x << ' ';
+//   }
+// }
